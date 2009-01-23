@@ -777,3 +777,4 @@ e48_series = map self_pow [1..]
 e48_sum = sum (take 1000 e48_series)
 -- "9110846700"
 euler48 = reverse (take 10 (reverse (show e48_sum)))
+
