@@ -43,16 +43,36 @@ factors n = n:(takeWhile (< n) . filter (factor n) $ [1..])
 prime :: Integer -> Bool
 prime n = length (factors n) <= 2
 
+-- my original naive prime factors method
 prime_factors :: Integer -> [Integer]
 prime_factors n = filter prime (factors n)
+
+max_factor :: Integer -> Integer
+max_factor n = fromIntegral (ceiling (sqrt (fromIntegral n)))
+
+first_prime_factor :: Integer -> Integer
+first_prime_factor n = 
+    -- Can probably make that y < sqrt(n), right?
+    head [x | x <- [y | y <- takeWhile (< (fromIntegral (max_factor n))) even_faster_primes] ++ [n], factor n x]
+
+faster_prime_factors :: Integer -> [Integer]
+faster_prime_factors n = 
+    let first = first_prime_factor n
+    in
+      if first < n
+      then nub (1:first:(faster_prime_factors (div n first)))
+      else [1,n]
+
 
 -- euler #3
 --
 -- The prime factors of 13195 are 5, 7, 13 and 29.
 -- What is the largest prime factor of the number 600851475143 ?
+
+-- 6857
 euler3 :: Integer
-euler3 = maximum (prime_factors 600851475143)
--- Probably correct but to slow
+euler3 = maximum (faster_prime_factors 600851475143)
+
 
 
 -- euler #4
@@ -573,7 +593,7 @@ integer_pow :: Int -> Int -> Integer
 integer_pow a b = (fromIntegral a) ^ b
 
 euler29_nums :: Int -> Int -> [Integer]
-euler29_nums low high = nub (sort [integer_pow a b | a <- [low..high], b <- [low..high]])
+euler29_nums low high = nub [integer_pow a b | a <- [low..high], b <- [low..high]]
 
 -- 9183
 euler29 :: Int
@@ -597,7 +617,16 @@ euler29 = length (euler29_nums 2 100)
 -- Find the sum of all the numbers that can be written as the sum of
 -- fifth powers of their digits.
 
--- sum_of_pth_power :: Integer -> Int -> Integer
--- sum_of_pth_power n p = sum (map (^ p) (integer_digits n))
+sum_of_pth_power :: Integer -> Int -> Integer
+sum_of_pth_power n p = sum (map (`integer_pow` p) (integer_digits n))
 
--- qualifies_for_e30 n p = (sum_of_pth_power n p) == n
+qualifies_for_e30 n p = n > 1 && (sum_of_pth_power n p) == n
+e30_example_nums = [x | x <- natural_numbers, qualifies_for_e30 x 4]
+e30_nums = [x | x <- natural_numbers, qualifies_for_e30 x 5]
+
+-- I found "6" by trying take 1, take 2, etc until it seemed to be
+-- taking too long and then just tried the sum and it worked on the
+-- site... need a more mathy approach in general.
+-- 443839
+euler30 = sum(take 6 e30_nums)
+
