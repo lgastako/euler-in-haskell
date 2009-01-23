@@ -624,12 +624,13 @@ memoized_fib = ((map fib' [0 ..]) !!)
 --fib_lengths :: [Int]
 --fib_lengths = map length fib_digits
 
---euler25 = succ 
---           (length 
---            (takeWhile 
---             ((< 1000) $ length) 
---             (map show memoized_fibs)))
-
+-- 4782
+euler25 = succ 
+          (length 
+           (takeWhile 
+            (< 1000) 
+            (map (length . show) memoized_fibs)))
+          
 
 -- euler #29
 --
@@ -687,6 +688,7 @@ e30_nums = [x | x <- natural_numbers, qualifies_for_e30 x 5]
 -- I found "6" by trying take 1, take 2, etc until it seemed to be
 -- taking too long and then just tried the sum and it worked on the
 -- site... need a more mathy approach in general.
+
 -- 443839
 euler30 = sum(take 6 e30_nums)
 
@@ -707,6 +709,7 @@ e34_nums = filter is_e34_num [3..]
 
 -- arrived at "take 2" by doing "take 5" and observing that it took
 -- forever after 2... so kind of cheating... but oh well.
+-- "40730"
 euler34 = sum (take 2 e34_nums)
 
 
@@ -730,6 +733,7 @@ rotations n =
 is_circular_prime = (all is_prime) . rotations
 
 -- too slow or some other problem keeps it from finishing even over an hour+
+-- I think I basically just need a faster prime generator.  Need to look into seives, etc.
 euler35 = length (filter is_circular_prime (takeWhile (< 1000000) even_faster_primes))
 
 
