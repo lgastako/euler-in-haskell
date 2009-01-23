@@ -1,4 +1,4 @@
-import Char (digitToInt)
+import Char (digitToInt, intToDigit)
 import Test.BenchPress (bench)
 import List (sort, nub, tails, transpose)
 import System.TimeIt (timeIt)
@@ -691,7 +691,7 @@ e30_nums = [x | x <- natural_numbers, qualifies_for_e30 x 5]
 euler30 = sum(take 6 e30_nums)
 
 
--- euler 34
+-- euler #34
 --
 -- 145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
 -- 
@@ -709,6 +709,63 @@ e34_nums = filter is_e34_num [3..]
 -- forever after 2... so kind of cheating... but oh well.
 euler34 = sum (take 2 e34_nums)
 
+
+-- euler #35
+--
+-- The number, 197, is called a circular prime because all rotations
+-- of the digits: 197, 971, and 719, are themselves prime.
+--
+-- There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17,
+-- 31, 37, 71, 73, 79, and 97.
+--
+-- How many circular primes are there below one million?
+
+next_rotation s = tail s ++ [head s]
+
+rotations :: Integer -> [Integer]
+rotations n =
+    let s = (show n)
+    in map read (take (length s) (iterate next_rotation s))
+
+is_circular_prime = (all is_prime) . rotations
+
+-- too slow or some other problem keeps it from finishing even over an hour+
+euler35 = length (filter is_circular_prime (takeWhile (< 1000000) even_faster_primes))
+
+
+-- euler #36
+-- 
+-- The decimal number, 585 = 1001001001v2 (binary), is palindromic in
+-- both bases.
+-- 
+-- Find the sum of all numbers, less than one million, which are
+-- palindromic in base 10 and base 2.
+-- 
+-- (Please note that the palindromic number, in either base, may not
+-- include leading zeros.)
+
+to_binary_str' :: Integer -> String -> String
+to_binary_str' n acc =
+    if n == 0
+    then acc
+    else 
+        let (t, r) = divMod n 2
+        in 
+          let rc = (fromIntegral r)
+          in to_binary_str' t ((intToDigit rc):acc)
+
+to_binary_str :: Integer -> String
+to_binary_str n = to_binary_str' n ""
+
+is_palindromic_in_binary :: Integer -> Bool
+is_palindromic_in_binary n = is_palindromic_number (read (to_binary_str n))
+
+-- 872187
+euler36 :: Integer
+euler36 = sum [n | n <- [1..999999], is_palindromic_number n, is_palindromic_in_binary n]
+
+
+
 -- euler #48
 --
 -- The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
@@ -718,4 +775,5 @@ euler34 = sum (take 2 e34_nums)
 self_pow n = n ^ n
 e48_series = map self_pow [1..]
 e48_sum = sum (take 1000 e48_series)
+-- "9110846700"
 euler48 = reverse (take 10 (reverse (show e48_sum)))
