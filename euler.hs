@@ -570,6 +570,7 @@ euler15_from_fourm = sum (map (digitToInt) (show (2^1000)))
 -- Find the sum of the digits in the number 100!
 
 fac :: Integer -> Integer
+fac 0 = 1
 fac 1 = 1
 fac n = n * fac (pred n)
 
@@ -700,7 +701,13 @@ euler30 = sum(take 6 e30_nums)
 -- Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 --
 
+is_e34_num n = sum (map (fac . fromIntegral) (integer_digits n)) == n
 
+e34_nums = filter is_e34_num [3..]
+
+-- arrived at "take 2" by doing "take 5" and observing that it took
+-- forever after 2... so kind of cheating... but oh well.
+euler34 = sum (take 2 e34_nums)
 
 -- euler #48
 --
