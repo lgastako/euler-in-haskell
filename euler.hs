@@ -1,6 +1,7 @@
 import Char (digitToInt)
 import Test.BenchPress (bench)
 import List (sort, nub)
+import System.TimeIt (timeIt)
 
 -- euler #1 
 --
@@ -44,8 +45,8 @@ prime :: Integer -> Bool
 prime n = length (factors n) <= 2
 
 -- my original naive prime factors method
-prime_factors :: Integer -> [Integer]
-prime_factors n = filter prime (factors n)
+--prime_factors :: Integer -> [Integer]
+--prime_factors n = filter prime (factors n)
 
 max_factor :: Integer -> Integer
 max_factor n = fromIntegral (ceiling (sqrt (fromIntegral n)))
@@ -121,7 +122,9 @@ divisible_by_all :: [Integer] -> Integer -> Bool
 -- increase running time by a constant factor (0..20) in this case I'm
 -- going to leave it and maybe I'll see the technique in the forums
 -- after I submit my answer.  Or maybe I'll understand it later.
-divisible_by_all ds n = length [d | d <- ds, mod n d == 0] == length ds
+--divisible_by_all ds n = length [d | d <- ds, mod n d == 0] == length ds
+-- ok now it's lazy, dunno if that'll be enough, but we'll see
+divisible_by_all ds n = length (takeWhile (factor n) [d | d <- ds]) == length ds
 
 euler5 :: Integer
 euler5 = head 
@@ -130,7 +133,7 @@ euler5 = head
            (reverse [11..20]))
           [20..])
 
--- way too slow
+-- STILL way too slow
 
 
 -- euler #6
@@ -214,6 +217,7 @@ products_of_n_consecutive_digits n s
                                                    (products_of_n_consecutive_digits n (tail s))
                                  | otherwise     = []
 
+-- 40824
 euler8 = maximum (products_of_n_consecutive_digits 5 euler8_input)
 
 -- euler #9
