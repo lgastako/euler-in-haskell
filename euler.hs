@@ -1,6 +1,7 @@
 import Char (digitToInt, intToDigit)
 import Test.BenchPress (bench)
 import List (sort, nub, tails, transpose)
+import Data.List (foldl1')
 import System.TimeIt (timeIt)
 
 -- euler #1 
@@ -530,10 +531,14 @@ collatz_seq n = n:map next_collatz (collatz_seq n)
 terminating_collatz_seq :: Integer -> [Integer]
 terminating_collatz_seq n = (takeWhile (/= 1) (collatz_seq n)) ++ [1]
 
---collatz_length :: Integer -> Integer
---collatz_length n = length (terminating_collatz_seq n)
+collatz_length :: Integer -> Int
+collatz_length n = length (terminating_collatz_seq n)
 
---euler14 = maximum (map collatz_length [1..999999])
+my_max = foldl1' max
+
+--euler14 = maximum (map collatz_length [3..999999])
+euler14 :: Int
+euler14 = my_max (map collatz_length [3..999999])
 
 
 -- euler 16
@@ -617,12 +622,6 @@ memoized_fib = ((map fib' [0 ..]) !!)
       fib' n = memoized_fib (n - 1) + memoized_fib (n - 2)
 
 -- (because I know I will need a faster fib than I would write naively...)
-
---fib_digits :: [[Int]]
---fib_digits = map integer_digits memoized_fib
-
---fib_lengths :: [Int]
---fib_lengths = map length fib_digits
 
 -- 4782
 euler25 = succ 
