@@ -13,7 +13,7 @@ import System.TimeIt (timeIt)
 
 -- 233168
 euler1 :: Integer
-euler1 = sum [x | x <- take 1000 [0..], mod x 3 == 0 || mod x 5 == 0]
+euler1 = sum [x | x <- [0..999], mod x 3 == 0 || mod x 5 == 0]
 
 
 -- euler #2
