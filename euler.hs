@@ -781,3 +781,20 @@ e48_sum = sum (take 1000 e48_series)
 -- "9110846700"
 euler48 = reverse (take 10 (reverse (show e48_sum)))
 
+-- euler #52
+--
+-- It can be seen that the number, 125874, and its double, 251748,
+-- contain exactly the same digits, but in a different order.
+--
+-- Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x,
+-- and 6x, contain the same digits.
+
+have_same_digits :: Integer -> Integer -> Bool
+have_same_digits a b = sort (integer_digits a) == sort (integer_digits b)
+
+is_e52_num :: Integer -> Bool
+is_e52_num n = all (have_same_digits n) (map (*n) [2..6])
+
+-- 142857
+euler52 :: Integer
+euler52 = head (filter is_e52_num natural_numbers)
