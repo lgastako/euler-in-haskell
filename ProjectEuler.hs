@@ -237,6 +237,31 @@ products_of_n_consecutive_digits n s
 get_first_n_consecutive_digits :: Int -> String -> [Int]
 get_first_n_consecutive_digits n s = map digitToInt (take n s)
 
+
+-- Problem #9
+-- Answer: 31875000 (Confirmed)
+--
+-- A Pythagorean triplet is a set of three natural numbers, a b c, for
+-- which,
+--
+--   a² + b² = c²
+--
+-- For example, 3² + 4² = 9 + 16 = 25 = 5².
+--
+-- There exists exactly one Pythagorean triplet for which a + b + c =
+-- 1000.
+-- Find the product abc.
+euler9 :: Integer
+euler9 = 
+    let target = 1000
+        (a, b) = head ([(a,b) | a <- [1..target],
+                                b <- [1..target],
+                                a < b, 
+                                (square a) + (square b) == (square (target - a - b))])
+        c = target - (a + b)
+    in a * b * c
+
+
 -- -------------- TODO: Finish cleaning up from here down -------------------- --
 
 
@@ -290,29 +315,6 @@ has_head [] = False
 -- from the threads (adapted to use my equivalent functions)... very nice.
 euler8_alt = maximum . map (product . take 5) . tails $ string_digits euler8_input
 
--- euler #9
---
--- A Pythagorean triplet is a set of three natural numbers, a b c, for
--- which,
---
---   a² + b² = c²
---
--- For example, 3² + 4² = 9 + 16 = 25 = 5².
---
--- There exists exactly one Pythagorean triplet for which a + b + c =
--- 1000.
--- Find the product abc.
-
--- 31875000
-euler9 :: Integer
-euler9 = 
-    let target = 1000
-        (a, b) = head ([(a,b) | a <- [1..target],
-                                b <- [1..target],
-                                a < b, 
-                                (square a) + (square b) == (square (target - a - b))])
-        c = target - (a + b)
-    in a * b * c
 
 -- euler #10
 --
