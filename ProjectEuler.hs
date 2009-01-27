@@ -125,7 +125,7 @@ square n = n * n
 --
 
 -- Since we know we are checking numbers we don't have to worry about
--- spaces or puncutation or whatever.
+-- spaces or puncutation.
 euler4 :: Integer
 euler4 = 
     let three_digit_numbers = [100..999] 
@@ -211,7 +211,7 @@ euler7 = nth_prime 10001
 
 -- Find the nth prime.
 nth_prime :: Int -> Integer
-nth_prime n = fast_primes !! n
+nth_prime n = primes !! n
 
 
 -------------
@@ -221,6 +221,10 @@ nth_prime n = fast_primes !! n
 -- Find the greatest product of five consecutive digits in the
 -- 1000-digit number.
 euler8 = maximum (products_of_n_consecutive_digits 5 euler8_input)
+
+
+-- From the PE forum (adapted to use my equivalent functions)... very nice.
+euler8_alt = maximum . map (product . take 5) . tails $ string_digits euler8_input
 
 
 -- Map a String of digits to a list of the products of each successive
@@ -260,6 +264,15 @@ euler9 =
                                 (square a) + (square b) == (square (target - a - b))])
         c = target - (a + b)
     in a * b * c
+
+
+-- Problem #10
+--
+-- The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+--
+-- Find the sum of all the primes below two million.
+euler10 :: Integer
+euler10 = sum (takeWhile (< 2000000) primes)
 
 
 -- -------------- TODO: Finish cleaning up from here down -------------------- --
@@ -307,32 +320,6 @@ prime n = length (factors n) <= 2
 -- has_head :: [a] :: [] -> Bool
 has_head [x:xs] = True
 has_head [] = False
-
-
-
-
-
--- from the threads (adapted to use my equivalent functions)... very nice.
-euler8_alt = maximum . map (product . take 5) . tails $ string_digits euler8_input
-
-
--- euler #10
---
--- site down, but from google it looks like it's sum all primes below 2,000,000.
-
-next_fast_prime :: Int -> Integer
-next_fast_prime n = 
-    let
-        previous_primes :: [Integer]
-        previous_primes =
-            take (n - 1) fast_primes
-    in head [x | x <- [(last previous_primes)..], not_divisible_by_any (filter (< (square x)) previous_primes) x]
-
-fast_primes :: [Integer]
-fast_primes = 2:3:[next_fast_prime n | n <- [3..]]
-
-euler10 :: Integer
-euler10 = sum (takeWhile (< 2000000) primes)
 
 
 -- euler #11
