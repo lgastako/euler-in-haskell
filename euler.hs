@@ -42,8 +42,16 @@ factor n m = mod n m == 0
 factors :: Integer -> [Integer]
 factors n = n:(takeWhile (< n) . filter (factor n) $ [1..])
 
+faster_factors_first_half :: Integer -> [Integer]
+faster_factors_first_half n = takeWhile (<= max_factor n) . filter (factor n) $ [1..]
+
+faster_factors :: Integer -> [Integer]
+faster_factors n = 
+    let first_half = faster_factors_first_half n
+    in nub (first_half ++ map (div n) first_half)
+
 prime :: Integer -> Bool
-prime n = length (factors n) <= 2
+prime n = length (faster_factors n) <= 2
 
 -- my original naive prime factors method
 --prime_factors :: Integer -> [Integer]
@@ -174,7 +182,7 @@ euler6 = (square_of_sum first_100_natural_numbers) -(sum_of_squares first_100_na
 -- What is the 10001st prime number?
 
 is_prime :: Integer -> Bool
-is_prime n = length (take 3 (factors n)) == 2
+is_prime n = length (take 3 (faster_factors n)) == 2
 
 nth_prime :: Int -> Integer
 nth_prime n = last (take n fast_primes)
@@ -380,7 +388,7 @@ triangle_numbers :: [Integer]
 triangle_numbers = map triangle_number [1..]
 
 --num_factors :: Integer -> Integer
-num_factors n = (length (factors n))
+num_factors n = (length (faster_factors n))
 
 --euler12 :: Integer
 euler12 = head [x | x <- triangle_numbers, ((num_factors x) > 500)]
@@ -503,8 +511,8 @@ euler13_input =
 -- The following iterative sequence is defined for the set of positive
 -- integers:
 -- 
--- n  n/2 (n is even)
--- n  3n + 1 (n is odd)
+-- n -> n/2 (n is even)
+-- n -> 3n + 1 (n is odd)
 --
 -- Using the rule above and starting with 13, we generate the
 -- following sequence:
@@ -534,12 +542,29 @@ terminating_collatz_seq n = (takeWhile (/= 1) (collatz_seq n)) ++ [1]
 collatz_length :: Integer -> Int
 collatz_length n = length (terminating_collatz_seq n)
 
-my_max = foldl1' max
+--my_max = foldl1' max
 
 --euler14 = maximum (map collatz_length [3..999999])
-euler14 :: Int
-euler14 = my_max (map collatz_length [3..999999])
+--euler14 :: Int
+--euler14 = my_max (map collatz_length [3..999999])
+-- the above would find the largest length, not the number with the largest length
 
+euler14' :: Int -> Int -> Int -> Int
+euler14' n res len = 
+    if n > 999999
+    then
+        res
+    else
+        let new_len = collatz_length (fromIntegral n)
+        in 
+          if new_len > len
+          then
+              euler14' (succ n) n new_len
+          else
+              euler14' (succ n) res len
+
+euler14 :: Int
+euler14 = euler14' 3 0 0
 
 -- euler 16
 --
@@ -768,6 +793,60 @@ euler36 :: Integer
 euler36 = sum [n | n <- [1..999999], is_palindromic_number n, is_palindromic_in_binary n]
 
 
+-- euler #40
+-- 
+-- An irrational decimal fraction is created by concatenating the
+-- positive integers:
+-- 
+--              v-- 12th digit 
+-- 0.123456789101112131415161718192021...
+--
+-- It can be seen that the 12th digit of the fractional part is 1.
+-- 
+-- If dvn represents the nth digit of the fractional part, find the
+-- value of the following expression.
+-- 
+-- dv1 * dv10 * dv100 * dv1000 * dv10000 * dv100000 * dv1000000
+
+-- My original brute-force approach (old and busted):
+-- e40_frac_part_string :: Int -> String
+-- e40_frac_part_string n = e40_frac_part_string' "" 1 n
+
+-- e40_frac_part_string' :: String -> Int -> Int -> String
+-- e40_frac_part_string' acc_s acc_n len = 
+--     if (length acc_s) > len
+--     then acc_s
+--     else e40_frac_part_string' (acc_s ++ show acc_n) (succ acc_n) len
+
+-- e40_full_str = e40_frac_part_string 1000000
+
+-- euler40 :: Integer
+-- euler40 = (fromIntegral . product)
+--           (map 
+--            (digitToInt . (e40_full_str !!)) 
+--            [1,10,100,1000,10000,100000,1000000])
+
+-- new hotness:  (also busted... sigh)
+
+-- there are 9 single digits numbers, 1 is less than 9, so it's just
+-- the index into those: (yes, obviously it's also just 1 from the
+-- definition and/or the definition of the problem, but I'm just
+-- trying to be consistent...)
+-- e40_single_digit_numbers = [1..9]
+-- e40_1 = e40_single_digit_numbers !! (pred 1)
+-- e40_single_digit_numbers_total_length = (length e40_single_digit_numbers) -- * 1 .. don't actually need to do it
+
+
+-- there are 99 two digit numbers, so, we can remove the 
+-- e40_two_digit_numbers = [10..99] 
+-- e40_10 = e40_two_digit_numbers !! (pred (99 - e40_single_digit_numbers_total_length))
+
+
+-- 0.123456789101112131415161718192021...
+-- 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+-- 1 2 3 4 5 6 7 8 9  1  0  1  1  1  2  1  3  1  4  1  5  1  6
+-- n..
+-- n mod 10 to get the number of digits grouped together that we need to skip
 
 -- euler #48
 --
