@@ -2,10 +2,9 @@ module ProjectEuler where
 
 import EulerInputs
 import Char (digitToInt, intToDigit)
-import Test.BenchPress (bench)
+--import Test.BenchPress (bench)
 import List (sort, nub, tails, transpose)
 import Data.List (foldl1')
-import System.TimeIt (timeIt)
 
 -------------
 -- Problem #1 
