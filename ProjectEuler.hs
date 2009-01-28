@@ -294,7 +294,7 @@ euler10 = sum (takeWhile (< 2000000) primes)
 
 --euler11 = map (take 4) (tails euler11_rows)
 euler11 :: Int
-euler11 = maximum [e11_max_col_product, e11_max_row_product, e11_max_diag_product]
+euler11 = maximum [e11_max_col_product, e11_max_row_product] --, e11_max_diag_product]
 
 
 -- Find the maximum of all the maximum products from all of the rows.
@@ -403,13 +403,13 @@ triangle_number n
 
 
 -------------
--- Problem 13
+-- Problem #13
 -- Answer: 5537376230 (Confirmed)
 --
 -- Work out the first ten digits of the sum of the following
 -- one-hundred 50-digit numbers.
-euler13 :: String
-euler13 = take 10 (show (sum euler13_input))
+euler13 :: Int
+euler13 = read (take 10 (show (sum euler13_input)))
 
 
 -------------
