@@ -436,7 +436,6 @@ euler13 = take 10 (show (sum euler13_input))
 --
 -- NOTE: Once the chain starts the terms are allowed to go above one
 -- million.
-
 euler14 :: Int
 euler14 = euler14' 3 0 0
 
@@ -474,6 +473,52 @@ collatz_seq n = n:map collatz (collatz_seq n)
 collatz n
         | even n    = div n 2
         | otherwise = ((3 * n) + 1)
+
+
+-------------
+-- Problem #16
+-- Answer: 1366
+--
+-- 2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+--
+-- What is the sum of the digits of the number 2^1000?
+euler16 :: Int
+euler16 = sum_of_digits (2 ^ 1000)
+
+
+-- Find the sum of the digits in a number.
+-- Refactored out commonality from #16 and #20.
+sum_of_digits :: Integer -> Int
+sum_of_digits n = sum (integer_digits n)
+
+
+-- Generate a list of the individual digits of a number.
+integer_digits :: Integer -> [Int]
+integer_digits = string_digits . show
+
+
+-- Generate a list of the individual digits in a String (of digits
+-- obviously).  Can we enforce that the String is a String of digits
+-- with Haskell's type system?
+string_digits :: String -> [Int]
+string_digits = map digitToInt
+
+-------------
+-- Problem #20
+-- Answer: 648 (Confirmed)
+--
+-- n! means n  (n x 1) x ...  3 x 2 x 1
+--
+-- Find the sum of the digits in the number 100!
+euler20 :: Int
+euler20 = sum_of_digits (fac 100)
+
+fac :: Integer -> Integer
+fac 0 = 1
+fac 1 = 1
+fac n = n * fac (pred n)
+
+
 
 
 -- -------------- TODO: Finish cleaning up from here down -------------------- --
@@ -526,49 +571,7 @@ has_head [] = False
 
 
 
--- euler 16
---
---
--- 2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
---
--- What is the sum of the digits of the number 2^1000?
 
-string_digits :: String -> [Int]
-string_digits = map digitToInt 
-
-integer_digits :: Integer -> [Int]
---integer_digits n = string_digits (show n)
-integer_digits = string_digits . show
-
-sum_of_digits :: Integer -> Int
-sum_of_digits n = sum (integer_digits n)
-
--- 1366
-euler16 :: Int
-euler16 = sum [digitToInt x | x <- show (2 ^ 1000)]
-
-euler16_refactored :: Int
-euler16_refactored = sum_of_digits (2 ^ 1000)
-
-euler16_from_fourm :: Int
-euler16_from_fourm = sum (map (digitToInt) (show (2^1000)))
-
--- euler #20
---
--- n! means n  (n x 1) x ...  3 x 2 x 1
---
--- Find the sum of the digits in the number 100!
-
-fac :: Integer -> Integer
-fac 0 = 1
-fac 1 = 1
-fac n = n * fac (pred n)
-
--- 648
-euler20 :: Int
-euler20 = sum (map (digitToInt) (show (fac 100)))
-
-euler20_refactored = sum_of_digits (fac 100)
 
 
 -- euler 21
