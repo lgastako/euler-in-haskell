@@ -412,6 +412,70 @@ euler13 :: String
 euler13 = take 10 (show (sum euler13_input))
 
 
+-------------
+-- Problem #14
+-- Answer: Unknown
+--
+-- The following iterative sequence is defined for the set of positive
+-- integers:
+--
+-- n -> n/2 (n is even)
+-- n -> 3n + 1 (n is odd)
+--
+-- Using the rule above and starting with 13, we generate the
+-- following sequence:
+--
+-- 13 ->  40 -> 20 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
+--
+-- It can be seen that this sequence (starting at 13 and finishing at
+-- 1) contains 10 terms. Although it has not been proved yet (Collatz
+-- Problem), it is thought that all starting numbers finish at 1.
+--
+-- Which starting number, under one million, produces the longest
+-- chain?
+--
+-- NOTE: Once the chain starts the terms are allowed to go above one
+-- million.
+
+euler14 :: Int
+euler14 = euler14' 3 0 0
+
+euler14' :: Int -> Int -> Int -> Int
+euler14' n res len =
+    if n > 999999
+    then
+        res
+    else
+        let new_len = collatz_length (fromIntegral n)
+        in
+          if new_len > len
+          then
+              euler14' (succ n) n new_len
+          else
+              euler14' (succ n) res len
+
+
+-- Find the length of the (terminating) collatz sequence starting with n.
+collatz_length :: Integer -> Int
+collatz_length n = length (terminating_collatz_seq n)
+
+
+-- Generate the (terminating) collatz sequence starting with n.
+terminating_collatz_seq :: Integer -> [Integer]
+terminating_collatz_seq n = (takeWhile (/= 1) (collatz_seq n)) ++ [1]
+
+
+-- Generate the (infinite) collatz sequence starting with n.
+collatz_seq :: Integer -> [Integer]
+collatz_seq n = n:map collatz (collatz_seq n)
+
+
+-- Generate the next collatz number given the current number n.
+collatz n
+        | even n    = div n 2
+        | otherwise = ((3 * n) + 1)
+
+
 -- -------------- TODO: Finish cleaning up from here down -------------------- --
 
 
@@ -461,65 +525,6 @@ has_head [] = False
 
 
 
--- euler #14
---
--- The following iterative sequence is defined for the set of positive
--- integers:
--- 
--- n -> n/2 (n is even)
--- n -> 3n + 1 (n is odd)
---
--- Using the rule above and starting with 13, we generate the
--- following sequence:
---
--- 13 ->  40 -> 20 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
---
--- It can be seen that this sequence (starting at 13 and finishing at
--- 1) contains 10 terms. Although it has not been proved yet (Collatz
--- Problem), it is thought that all starting numbers finish at 1.
---
--- Which starting number, under one million, produces the longest
--- chain?
--- 
--- NOTE: Once the chain starts the terms are allowed to go above one
--- million.
-
-next_collatz n
-             | even n    = div n 2
-             | otherwise = ((3 * n) + 1)
-
-collatz_seq :: Integer -> [Integer]
-collatz_seq n = n:map next_collatz (collatz_seq n)
-
-terminating_collatz_seq :: Integer -> [Integer]
-terminating_collatz_seq n = (takeWhile (/= 1) (collatz_seq n)) ++ [1]
-
-collatz_length :: Integer -> Int
-collatz_length n = length (terminating_collatz_seq n)
-
---my_max = foldl1' max
-
---euler14 = maximum (map collatz_length [3..999999])
---euler14 :: Int
---euler14 = my_max (map collatz_length [3..999999])
--- the above would find the largest length, not the number with the largest length
-
-euler14' :: Int -> Int -> Int -> Int
-euler14' n res len = 
-    if n > 999999
-    then
-        res
-    else
-        let new_len = collatz_length (fromIntegral n)
-        in 
-          if new_len > len
-          then
-              euler14' (succ n) n new_len
-          else
-              euler14' (succ n) res len
-
-euler14 :: Int
-euler14 = euler14' 3 0 0
 
 -- euler 16
 --
