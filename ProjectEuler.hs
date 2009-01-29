@@ -35,10 +35,20 @@ alt_euler2 :: Integer
 alt_euler2 = sum . takeWhile (< 4000000) . filter even $ fibs
 
 
--- The fibonacci sequence.  Clean implementation ganked from the
--- intarwebs.
-fibs :: [Integer]
-fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+-- The fibonacci sequence.  I original did a naive implementation,
+-- then ganked this rather clean implementation from the intarwebs:
+--
+--     fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+--
+-- But ultimately these were too slow for some of the more advanced
+-- problems so I found and included the following memoized version
+-- from http://www.haskell.org/pipermail/haskell-cafe/2007-February/022590.html.
+fibs = map fib [1..]
+fib = ((map fib' [0 ..]) !!)
+    where
+      fib' 0 = 0
+      fib' 1 = 1
+      fib' n = fib (n - 1) + fib (n - 2)
 
 
 -------------
@@ -500,6 +510,7 @@ integer_digits = string_digits . show
 string_digits :: String -> [Int]
 string_digits = map digitToInt
 
+
 -------------
 -- Problem #20
 -- Answer: 648 (Confirmed)
@@ -516,6 +527,7 @@ fac 1 = 1
 fac n = n * fac (pred n)
 
 
+-------------
 -- Problem #21
 -- Answer: 31626 (Confirmed)
 -- NOTE: This solution is too slow.
@@ -540,6 +552,19 @@ is_amicable :: Integer -> Bool
 is_amicable n =
     let d n = sum (tail (factors n))
     in n == d(d(n)) && d(n) /= n
+
+
+-------------
+-- Problem #25
+-- Answer: 4782 (Confirmed)
+--
+-- What is the first term in the Fibonacci sequence to contain 1000 digits?
+euler25 = succ
+          (length
+           (takeWhile
+            (< 1000)
+            (map (length . show) fibs)))
+
 
 
 
@@ -586,28 +611,6 @@ prime :: Integer -> Bool
 prime n = length (factors n) <= 2
 
 
-
-
--- euler 25
---
--- What is the first term in the Fibonacci sequence to contain 1000 digits?
-
--- from http://www.haskell.org/pipermail/haskell-cafe/2007-February/022590.html
-memoized_fibs = map memoized_fib [1..]
-memoized_fib = ((map fib' [0 ..]) !!)
-    where
-      fib' 0 = 0
-      fib' 1 = 1
-      fib' n = memoized_fib (n - 1) + memoized_fib (n - 2)
-
--- (because I know I will need a faster fib than I would write naively...)
-
--- 4782
-euler25 = succ
-          (length
-           (takeWhile
-            (< 1000)
-            (map (length . show) memoized_fibs)))
 
 
 -- euler #29
