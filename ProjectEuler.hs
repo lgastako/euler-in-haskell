@@ -151,11 +151,8 @@ is_palindromic_number n = show n == (reverse . show) n
 -- What is the smallest number that is evenly divisible by all of the
 -- numbers from 1 to 20?
 euler5 :: Integer
-euler5 = head 
-         (filter 
-          (divisible_by_all 
-           (reverse [11..20]))
-          [20..])
+euler5 = let nums_to_check = reverse [11..20]
+         in head (filter (divisible_by_all nums_to_check) [20..])
 
 
 -- Determine if n is divisible by all xs.
