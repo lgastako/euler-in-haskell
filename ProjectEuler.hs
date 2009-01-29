@@ -11,7 +11,7 @@ import Data.List (foldl1')
 --
 -- If we list all the natural numbers below 10 that are multiples of 3
 -- or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
--- 
+--
 -- Find the sum of all the multiples of 3 or 5 below 1000.
 euler1 :: Integer
 euler1 = sum [x | x <- [0..999], mod x 3 == 0 || mod x 5 == 0]
@@ -52,10 +52,10 @@ euler3 = maximum (prime_factors 600851475143)
 
 
 -- Find the prime factors of n as quickly as possible.
--- 
+--
 -- I'm sure there are faster methods but for now this'll do.
 prime_factors :: Integer -> [Integer]
-prime_factors n = 
+prime_factors n =
     let first = first_prime_factor n
     in
       if first < n
@@ -65,13 +65,13 @@ prime_factors n =
 
 -- Find the first prime factor of n.
 first_prime_factor :: Integer -> Integer
-first_prime_factor n = 
+first_prime_factor n =
     head [x | x <- [y | y <- takeWhile (< (fromIntegral (max_low_factor n))) primes] ++ [n], factor n x]
 
 
 -- Find the maximum number we have to check to find all the factors of
 -- a number.
--- 
+--
 -- Is this really the cleanest way to do this in Haskell? I imagine
 -- not.
 max_low_factor :: Integer -> Integer
@@ -89,9 +89,9 @@ next_prime n =
     let
         previous_primes :: [Integer]
         previous_primes = take (n - 1) primes
-    in 
-      head [x | x <- [(last previous_primes)..], 
-                      odd x, 
+    in
+      head [x | x <- [(last previous_primes)..],
+                      odd x,
                       not_divisible_by_any (filter (< (square x)) previous_primes) x]
 
 
@@ -127,10 +127,10 @@ square n = n * n
 -- Since we know we are checking numbers we don't have to worry about
 -- spaces or puncutation.
 euler4 :: Integer
-euler4 = 
-    let three_digit_numbers = [100..999] 
-    in maximum 
-           (filter 
+euler4 =
+    let three_digit_numbers = [100..999]
+    in maximum
+           (filter
             is_palindromic_number
             [x * y | x <- three_digit_numbers, y <- three_digit_numbers ])
 
