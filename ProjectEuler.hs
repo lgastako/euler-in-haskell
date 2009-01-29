@@ -516,6 +516,32 @@ fac 1 = 1
 fac n = n * fac (pred n)
 
 
+-- Problem #21
+-- Answer: 31626 (Confirmed)
+-- NOTE: This solution is too slow.
+--
+-- Let d(n) be defined as the sum of proper divisors of n (numbers
+-- less than n which divide evenly into n).
+--
+-- If d(a) = b and d(b) = a, where a =/= b, then a and b are an
+-- amicable pair and each of a and b are called amicable numbers.
+--
+-- For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20,
+-- 22, 44, 55 and 110; therefore d(220) = 284. The proper divisors of
+-- 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
+--
+-- Evaluate the sum of all the amicable numbers under 10000.
+euler21 :: Integer
+euler21 = sum (filter is_amicable [1..9999])
+
+
+-- Determine if n is an amicable number.
+is_amicable :: Integer -> Bool
+is_amicable n =
+    let d n = sum (tail (factors n))
+    in n == d(d(n)) && d(n) /= n
+
+
 
 
 -- -------------- TODO: Finish cleaning up from here down -------------------- --
@@ -561,28 +587,6 @@ prime n = length (factors n) <= 2
 
 
 
--- euler 21
---
--- Let d(n) be defined as the sum of proper divisors of n (numbers
--- less than n which divide evenly into n).
---
--- If d(a) = b and d(b) = a, where a =/= b, then a and b are an
--- amicable pair and each of a and b are called amicable numbers.
---
--- For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20,
--- 22, 44, 55 and 110; therefore d(220) = 284. The proper divisors of
--- 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
---
--- Evaluate the sum of all the amicable numbers under 10000.
-d :: Integer -> Integer
-d n = sum (tail (factors n))
-
-is_amicable :: Integer -> Bool
-is_amicable n = n == d(d(n)) && d(n) /= n
-
--- 31626
-euler21 :: Integer
-euler21 = sum (filter is_amicable [1..9999])
 
 -- euler 25
 --
