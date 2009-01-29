@@ -597,6 +597,43 @@ integer_pow :: Int -> Int -> Integer
 integer_pow a b = (fromIntegral a) ^ b
 
 
+-------------
+-- Problem #30
+-- Answer: 443839
+--
+-- Surprisingly there are only three numbers that can be written as
+-- the sum of fourth powers of their digits:
+--
+-- 1634 = 1^4 + 6^4 + 3^4 + 4^4
+-- 8208 = 8^4 + 2^4 + 0^4 + 8^4
+-- 9474 = 9^4 + 4^4 + 7^4 + 4^4
+-- As 1 = 1^4 is not a sum it is not included.
+--
+-- The sum of these numbers is 1634 + 8208 + 9474 = 19316.
+--
+-- Find the sum of all the numbers that can be written as the sum of
+-- fifth powers of their digits.
+--
+-- I found "6" by trying take 1, take 2, etc until it seemed to be
+-- taking too long and then just tried the sum and it worked on the
+-- site... need a more mathy approach in general.
+euler30 = sum(take 6 e30_nums)
+
+
+-- An infinite list of the numbers that qualify for inclusion in the
+-- e30 problem.
+e30_nums = [x | x <- natural_numbers, is_sum_of_nth_power_of_digits x 5]
+
+
+-- Tests whether n qualifies for this problem.
+is_sum_of_nth_power_of_digits n p = n > 1 && (sum_of_pth_power n p) == n
+
+
+-- Find the sum of the pth power of each digit in n.
+sum_of_pth_power :: Integer -> Int -> Integer
+sum_of_pth_power n p = sum (map (`integer_pow` p) (integer_digits n))
+
+
 
 
 -- -------------- TODO: Finish cleaning up from here down -------------------- --
@@ -641,36 +678,6 @@ prime :: Integer -> Bool
 prime n = length (factors n) <= 2
 
 
-
-
--- euler #30
---
--- Surprisingly there are only three numbers that can be written as
--- the sum of fourth powers of their digits:
---
--- 1634 = 1^4 + 6^4 + 3^4 + 4^4
--- 8208 = 8^4 + 2^4 + 0^4 + 8^4
--- 9474 = 9^4 + 4^4 + 7^4 + 4^4
--- As 1 = 1^4 is not a sum it is not included.
---
--- The sum of these numbers is 1634 + 8208 + 9474 = 19316.
---
--- Find the sum of all the numbers that can be written as the sum of
--- fifth powers of their digits.
-
-sum_of_pth_power :: Integer -> Int -> Integer
-sum_of_pth_power n p = sum (map (`integer_pow` p) (integer_digits n))
-
-qualifies_for_e30 n p = n > 1 && (sum_of_pth_power n p) == n
-e30_example_nums = [x | x <- natural_numbers, qualifies_for_e30 x 4]
-e30_nums = [x | x <- natural_numbers, qualifies_for_e30 x 5]
-
--- I found "6" by trying take 1, take 2, etc until it seemed to be
--- taking too long and then just tried the sum and it worked on the
--- site... need a more mathy approach in general.
-
--- 443839
-euler30 = sum(take 6 e30_nums)
 
 
 -- euler #34
