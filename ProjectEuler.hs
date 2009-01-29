@@ -173,9 +173,9 @@ divisible_by_all xs n = length (takeWhile (factor n) xs) == length xs
 --
 -- Find the difference between the sum of the squares of the first one
 -- hundred natural numbers and the square of the sum.
-euler6 = 
+euler6 =
     let first_100_natural_numbers = take 100 natural_numbers
-    in (square_of_sum first_100_natural_numbers) - (sum_of_squares first_100_natural_numbers) 
+    in (square_of_sum first_100_natural_numbers) - (sum_of_squares first_100_natural_numbers)
 
 
 -- The natural numbers.  Purely for readability
@@ -202,7 +202,7 @@ sum_of_squares xs = sum (map square xs)
 -- can see that the 6th prime is 13.
 --
 -- What is the 10001st prime number?
-euler7 :: Integer 
+euler7 :: Integer
 euler7 = nth_prime 10001
 
 
@@ -228,7 +228,7 @@ euler8_alt = maximum . map (product . take 5) . tails $ string_digits euler8_inp
 -- n digits from the String.
 products_of_n_consecutive_digits :: Int -> String -> [Int]
 products_of_n_consecutive_digits n s
-                                 | length s >= n = (product 
+                                 | length s >= n = (product
                                                     (get_first_n_consecutive_digits n s)):
                                                    (products_of_n_consecutive_digits n (tail s))
                                  | otherwise     = []
@@ -254,11 +254,11 @@ get_first_n_consecutive_digits n s = map digitToInt (take n s)
 -- 1000.
 -- Find the product abc.
 euler9 :: Integer
-euler9 = 
+euler9 =
     let target = 1000
         (a, b) = head ([(a,b) | a <- [1..target],
                                 b <- [1..target],
-                                a < b, 
+                                a < b,
                                 (square a) + (square b) == (square (target - a - b))])
         c = target - (a + b)
     in a * b * c
@@ -801,7 +801,7 @@ euler36 = sum [n | n <- [1..999999], is_palindromic_number n, is_palindromic_in_
 -- euler #48
 --
 -- The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
--- 
+--
 -- Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
 
 self_pow n = n ^ n
