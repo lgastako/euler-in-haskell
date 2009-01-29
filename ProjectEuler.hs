@@ -6,7 +6,7 @@ import List (sort, nub, tails, transpose)
 import Data.List (foldl1')
 
 -------------
--- Problem #1 
+-- Problem #1
 -- Answer: 233168 (Confirmed)
 --
 -- If we list all the natural numbers below 10 that are multiples of 3
